@@ -1,7 +1,8 @@
 ; nasm -f elf64 Nasm64-boilerplate.asm -o test.o
 ; ld test.o -e _main -o test
 ; BSD 2 clause license 
-
+; where you push the return on linux
+; on BSD you mov to edi instead
 [bits 64]
 
 .GLOBAL:
@@ -9,7 +10,6 @@ extern _main
 
 SECTION code
 _main:
-    mov rax, dat
     mov rax, dat
     mov ds, rax
     mov rax, stack
