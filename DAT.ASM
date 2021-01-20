@@ -28,10 +28,12 @@ drop:
 	mov dl,0x0A
 	mov ah,0x06
 	int 0x21
-	mov dx,0x0D
+	mov [mybyte], byte 0x0D
+	mov dx,mybyte
 	mov ah,0x40
 	int 0x21
-	mov dx,0x0A
+	mov [mybyte], byte 0x0A
+	mov dx,mybyte
 	mov ah,0x40
 	int 0x21
 	jmp drop
