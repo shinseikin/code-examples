@@ -45,6 +45,11 @@ mult:	add dx,cx
 	jne numone
 	mov [inputone], word dx
 
+	push fouth
+	push third
+	push secnd
+	push first
+
 numtwo:	mov dl,0xFF
 	mov ah,0x06
 	int 0x21
