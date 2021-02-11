@@ -37,6 +37,7 @@ next:
 	mov ax,[mybyte]
 	call convert
 	mov bx,ax
+	mov dx,0x00
 mult:	add dx,cx
 	dec bx
 	cmp bx,0x00
@@ -68,6 +69,7 @@ nxt:
 	mov ax,[mybyte]
 	call convert
 	mov bx,ax
+	mov dx,0x00
 mlt:	add dx,cx
 	dec bx
 	cmp bx,0x00
@@ -81,26 +83,27 @@ mlt:	add dx,cx
 	add ax, word [inputtwo]
 
 	; print output
-	mov cx,0x00
 	push fouth
 	push third
 	push secnd
 	push first
 column: 
+	mov cx,0x00
 	pop bx
 mod:	sub ax,bx
 	inc cx
 	cmp ax,bx
 	ja mod
 	push ax
-	mov bx,hexdgt
-	add bx,cx
-	mov dl,byte [bx]
+	mov dx,hexdgt
+	add dx,cx
+	mov byte [mybyte], word [dx]
+	mov dl, byte [mybyte]
 	mov ah,0x02
 	int 0x21
 	pop ax
-	cmp ax,0x00
-	jnz column
+	cmp bx,0x0001
+	jne column
 	
 	; boiler plate below
 	mov ax,04C00H
