@@ -88,27 +88,29 @@ mlt:	add dx,cx
 	mov [output], word ax
 
 	; print output
-	push fouth
-	push third
-	push secnd
-	push first
+	push 0x000F
+	push 0x00F0
+	push 0x0F00
+	push 0xF000
 
-	mov [count], word -1
+	mov [count], byte 0x04
 column: 
-	mov dx,0x00
+	dec byte [count]
 	pop cx
-mod:	sub [output], word cx
-	inc dx
-	cmp [output], word cx
-	ja mod
+	mov ax, word [output]
+	and ax,cx
+	mov cl, byte [count]
+	shr ax,cl
+	shr ax,cl
+	shr ax,cl
+	shr ax,cl
 	mov bx,hexdgt
-	mov di,dx
+	mov di,ax
 	mov dl, byte [bx+di]
 	mov ah,0x02
 	int 0x21
-	inc word [count]
-	cmp [count], word 0x04
-	jb column
+	cmp [count], byte 0x00
+	jnz column
 	
 	; boiler plate below
 	mov ax,04C00H
@@ -127,7 +129,7 @@ fouth dw 0x0001
 SEGMENT bss
 
 mybyte resb 1
-count resw 1
+count resb 1
 output resw 1
 
 	SEGMENT stack stack
