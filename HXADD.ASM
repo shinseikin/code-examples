@@ -85,6 +85,7 @@ mlt:	add dx,cx
 	; here is the addition
 	mov ax, word [inputone]
 	add ax, word [inputtwo]
+	mov [output], word ax
 
 	; print output
 	push fouth
@@ -96,17 +97,15 @@ mlt:	add dx,cx
 column: 
 	mov dx,0x00
 	pop cx
-mod:	sub ax,cx
+mod:	sub [output], word cx
 	inc dx
-	cmp ax,cx
+	cmp [output], word cx
 	ja mod
-	push ax
 	mov bx,hexdgt
 	mov di,dx
 	mov dl, byte [bx+di]
-	mov ah,0x06
+	mov ah,0x02
 	int 0x21
-	pop ax
 	inc word [count]
 	cmp [count], word 0x04
 	jb column
@@ -129,6 +128,7 @@ SEGMENT bss
 
 mybyte resb 1
 count resw 1
+output resw 1
 
 	SEGMENT stack stack
 	resb 64
