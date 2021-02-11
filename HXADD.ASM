@@ -88,18 +88,17 @@ mlt:	add dx,cx
 	push secnd
 	push first
 column: 
-	mov cx,0x00
-	pop bx
-mod:	sub ax,bx
-	inc cx
-	cmp ax,bx
+	mov dx,0x00
+	pop cx
+mod:	sub ax,cx
+	inc dx
+	cmp ax,cx
 	ja mod
 	push ax
-	mov dx,hexdgt
-	add dx,cx
-	mov byte [mybyte], word [dx]
-	mov dl, byte [mybyte]
-	mov ah,0x02
+	mov bx,hexdgt
+	mov di,dx
+	mov dl, byte [bx+di]
+	mov ah,0x06
 	int 0x21
 	pop ax
 	cmp bx,0x0001
