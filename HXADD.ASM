@@ -19,6 +19,7 @@ EXTERN convert
 	push secnd
 	push first
 
+	mov [count], word -1
 numone:	mov dl,0xFF
 	mov ah,0x06
 	int 0x21
@@ -42,8 +43,9 @@ mult:	add dx,cx
 	dec bx
 	cmp bx,0x00
 	jnz mult
-	cmp cx,0x001
-	jne numone
+	inc word [count]
+	cmp [count], word 0x04
+	jb numone
 	mov [inputone], word dx
 
 	push fouth
@@ -51,6 +53,7 @@ mult:	add dx,cx
 	push secnd
 	push first
 
+	mov [count], word -1
 numtwo:	mov dl,0xFF
 	mov ah,0x06
 	int 0x21
@@ -74,8 +77,9 @@ mlt:	add dx,cx
 	dec bx
 	cmp bx,0x00
 	jnz mlt
-	cmp cx,0x0001
-	jne numtwo
+	inc word [count]
+	cmp [count], word 0x04
+	jb numtwo
 	mov [inputtwo], word dx
 
 	; here is the addition
@@ -87,6 +91,8 @@ mlt:	add dx,cx
 	push third
 	push secnd
 	push first
+
+	mov [count], word -1
 column: 
 	mov dx,0x00
 	pop cx
@@ -101,14 +107,16 @@ mod:	sub ax,cx
 	mov ah,0x06
 	int 0x21
 	pop ax
-	cmp bx,0x0001
-	jne column
+	inc word [count]
+	cmp [count], word 0x04
+	jb column
 	
 	; boiler plate below
 	mov ax,04C00H
 	int 21H
 
 SEGMENT data
+
 hexdgt db "0123456789ABCDEF",'$'
 inputone dw 1
 inputtwo dw 1
@@ -116,8 +124,12 @@ first dw 0x1000
 secnd dw 0x0100
 third dw 0x0010
 fouth dw 0x0001
+
 SEGMENT bss
+
 mybyte resb 1
+count resw 1
+
 	SEGMENT stack stack
 	resb 64
 	stacktop:
