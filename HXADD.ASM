@@ -87,31 +87,37 @@ mlt:	add dx,cx
 	add ax, word [inputtwo]
 	mov [output], word ax
 
-	; print output
-	push 0x000F
-	push 0x00F0
-	push 0x0F00
-	push 0xF000
-
-	mov [count], byte 0x04
-column: 
-	dec byte [count]
-	pop cx
-	mov ax, word [output]
-	and ax,cx
-	mov cl, byte [count]
-	shr ax,cl
-	shr ax,cl
-	shr ax,cl
-	shr ax,cl
+	mov cx,ax
+	shr cx,12
 	mov bx,hexdgt
-	mov di,ax
+	mov di,cx
 	mov dl, byte [bx+di]
 	mov ah,0x02
 	int 0x21
-	cmp [count], byte 0x00
-	jnz column
+	mov cx, word [output]
+	ror cx,4
+	shr cx,12
+	mov di,cx
+	mov dl, byte [bx+di]
+	mov ah,0x02
+	int 0x21
+	mov cx, word [output]
+	ror cx,8
+	shr cx,12
+	mov di,cx
+	mov dl, byte [bx+di]
+	mov ah,0x02
+	int 0x21
+	mov cx, word [output]
+	ror cx,12
+	shr cx,12
+	mov di,cx
+	mov dl, byte [bx+di]
+	mov ah,0x02
+	int 0x21
 	
+
+
 	; boiler plate below
 	mov ax,04C00H
 	int 21H
