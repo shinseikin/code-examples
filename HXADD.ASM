@@ -14,13 +14,10 @@ EXTERN convert
 	mov sp,ax
 	; boiler plate above
 
-	push fouth
-	push third
-	push secnd
-	push first
-
-	mov [count], word -1
-numone:	mov dl,0xFF
+	mov ch,0x00
+	mov bx,0x00
+numone:	
+	mov dl,0xFF
 	mov ah,0x06
 	int 0x21
 	jz numone
@@ -34,27 +31,23 @@ numone:	mov dl,0xFF
 	mov ah,0x02
 	int 0x21
 next:
-	pop cx
 	mov ax,[mybyte]
 	call convert
-	mov bx,ax
-	mov dx,0x00
-mult:	add dx,cx
-	dec bx
-	cmp bx,0x00
-	jnz mult
-	inc word [count]
-	cmp [count], word 0x04
+	mov cl,ch
+	rol bx,cl
+	rol bx,cl
+	rol bx,cl
+	rol bx,cl
+	add bx,ax
+	inc ch
+	cmp ch,0x05
 	jb numone
-	mov [inputone], word dx
+	mov [inputone], word bx
 
-	push fouth
-	push third
-	push secnd
-	push first
-
-	mov [count], word -1
-numtwo:	mov dl,0xFF
+	mov bx,0x00
+	mov ch,0x00
+numtwo:	
+	mov dl,0xFF
 	mov ah,0x06
 	int 0x21
 	jz numtwo
@@ -68,23 +61,23 @@ numtwo:	mov dl,0xFF
 	mov ah,0x02
 	int 0x21
 nxt:
-	pop cx
 	mov ax,[mybyte]
 	call convert
-	mov bx,ax
-	mov dx,0x00
-mlt:	add dx,cx
-	dec bx
-	cmp bx,0x00
-	jnz mlt
-	inc word [count]
-	cmp [count], word 0x04
+	mov cl,ch
+	rol bx,cl
+	rol bx,cl
+	rol bx,cl
+	rol bx,cl
+	add bx,ax
+	inc ch
+	cmp ch,0x05
 	jb numtwo
-	mov [inputtwo], word dx
+	mov [inputtwo], word bx
 
 	; here is the addition
 	mov ax, word [inputone]
-	add ax, word [inputtwo]
+	mov bx, word [inputtwo]
+	add ax,bx
 	mov [output], word ax
 
 	mov cx,ax
@@ -95,21 +88,21 @@ mlt:	add dx,cx
 	mov ah,0x02
 	int 0x21
 	mov cx, word [output]
-	ror cx,4
+	rol cx,4
 	shr cx,12
 	mov di,cx
 	mov dl, byte [bx+di]
 	mov ah,0x02
 	int 0x21
 	mov cx, word [output]
-	ror cx,8
+	rol cx,8
 	shr cx,12
 	mov di,cx
 	mov dl, byte [bx+di]
 	mov ah,0x02
 	int 0x21
 	mov cx, word [output]
-	ror cx,12
+	rol cx,12
 	shr cx,12
 	mov di,cx
 	mov dl, byte [bx+di]
@@ -127,10 +120,6 @@ SEGMENT data
 hexdgt db "0123456789ABCDEF",'$'
 inputone dw 1
 inputtwo dw 1
-first dw 0x1000
-secnd dw 0x0100
-third dw 0x0010
-fouth dw 0x0001
 
 SEGMENT bss
 
